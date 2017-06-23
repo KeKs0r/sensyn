@@ -1,0 +1,11 @@
+dist
+storybook-static
+node_modules
+
+.vscode
+.idea
+
+.env
+.DS_Store
+
+*.log

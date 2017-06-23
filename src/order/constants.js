@@ -1,0 +1,10 @@
+module.exports = {
+  ACTIONS: {
+    CREATE_ORDER: 'ORDER.CREATE_ORDER',
+    CONFIRM_ORDER: 'ORDER.CONFIRM_ORDER'
+  },
+  STATUS: {
+    OPEN: 'ORDER.OPEN',
+    CONFIRMED: 'ORDER.CONFIRMED'
+  }
+}
