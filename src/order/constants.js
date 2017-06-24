@@ -6,5 +6,9 @@ module.exports = {
   STATUS: {
     OPEN: 'ORDER.OPEN',
     CONFIRMED: 'ORDER.CONFIRMED'
+  },
+  EVENTS: {
+    ORDER_CREATED: 'ORDER.CREATED',
+    ORDER_CONFIRMED: 'ORDER.CONFIRMED'
   }
 }

@@ -10,6 +10,7 @@ function initEvents (options) {
   }, (msg, reply) => {
     reply(null, store.get(msg.filter))
   })
+
   this.add({
     role: 'events',
     cmd: 'add',

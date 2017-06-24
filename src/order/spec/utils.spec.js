@@ -1,10 +1,10 @@
 const Seneca = require('seneca')
 const Promise = require('bluebird')
-const { get_product } = require('./utils')
+const { getProduct } = require('./utils')
 
 test('returns default product', () => {
   const s = Seneca({ log: 'test' })
-    .use(get_product)
+    .use(getProduct)
   const act = Promise.promisify(s.act, {context: s})
 
   expect.assertions(2)
@@ -21,7 +21,7 @@ test('returns default product', () => {
 
 test('can provide product to plugin', () => {
   const s = Seneca({ log: 'test' })
-    .use(get_product, {name: 'Special Product'})
+    .use(getProduct, {name: 'Special Product'})
   const act = Promise.promisify(s.act, {context: s})
 
   expect.assertions(2)

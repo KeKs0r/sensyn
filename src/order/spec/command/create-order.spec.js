@@ -1,47 +1,60 @@
 const Seneca = require('seneca')
 const Promise = require('bluebird')
-// const { getCustomer, getProduct } = require('../utils')
-// const { STATUS } = require('../../constants')
+const { getCustomer, getProduct } = require('../utils')
+const { STATUS, EVENTS } = require('../../constants')
 
-/*
 function testSeneca () {
   const s = Seneca({ log: 'test' })
     .test()
     .use('seneca-joi')
     .use(getCustomer)
     .use(getProduct)
-    .use(require('../handler/confirm-order'))
+    .use(require('../../command/create-order'))
   return Promise.promisify(s.act, {context: s})
 }
-*/
 
 function validationSeneca () {
   const s = Seneca({ log: 'silent' })
     .use('seneca-joi')
-    .use(require('../../handler/confirm-order'))
+    .use(require('../../command/create-order'))
   return Promise.promisify(s.act, {context: s})
 }
 
 describe('1. Validation', () => {
   const act = validationSeneca()
 
-  test('requires order', () => {
+  test('requires customer', () => {
     expect.assertions(2)
     return act({
       role: 'order',
-      cmd: 'confirm'
+      cmd: 'create',
+      product: 5
     })
       .catch((err) => {
         expect(err).toBeTruthy()
-        expect(err.details.message).toMatch(/order/)
+        expect(err.details.message).toMatch(/customer/)
+      })
+  })
+
+  test('requires product', () => {
+    expect.assertions(2)
+    return act({
+      role: 'order',
+      cmd: 'create',
+      customer: 3
+    })
+      .catch((err) => {
+        expect(err).toBeTruthy()
+        expect(err.details.message).toMatch(/product/)
       })
   })
 })
 
 const command = {
   role: 'order',
-  cmd: 'confirm',
-  order: 3
+  cmd: 'create',
+  product: 1,
+  customer: 2
 }
 
 describe('3. Load Context', () => {
@@ -78,7 +91,7 @@ describe('4. Generate Events', () => {
     return act(command)
       .then((result) => {
         expect(result.event).toMatchObject({
-          type: 'order.created',
+          type: EVENTS.ORDER_CREATED,
           id: expect.anything(),
           product: expect.objectContaining({
             id: 1,
@@ -119,5 +132,3 @@ describe('5. Apply Events', () => {
 describe('6. Commit', () => {
   test('Commit is not yet implemented')
 })
-
-*/

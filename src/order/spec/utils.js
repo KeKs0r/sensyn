@@ -10,6 +10,24 @@ function getCustomer (customer) {
   }, (msg, reply) => {
     reply(null, Object.assign({}, defaultCustomer, customer, {id: msg.id}))
   })
+  return 'mock-customer'
+}
+
+function getEvents () {
+  const events = require('./fixtures/events')
+  this.add({
+    role: 'events',
+    cmd: 'get'
+  }, (msg, reply) => reply(events))
+  return 'mock-events'
+}
+
+function getOrder (order) {
+  this.add({
+    role: 'order',
+    cmd: 'get'
+  }, (msg, reply) => reply(order))
+  return 'mock-get-order'
 }
 
 function getProduct (product) {
@@ -24,9 +42,12 @@ function getProduct (product) {
   }, (msg, reply) => {
     reply(null, Object.assign({}, defaultProduct, product, {id: msg.id}))
   })
+  return 'mock-product'
 }
 
 module.exports = {
   getCustomer,
-  getProduct
+  getProduct,
+  getEvents,
+  getOrder
 }

@@ -1,44 +1,63 @@
+const uuid = require('uuid')
 const Async = require('async')
 const Joi = require('joi')
+const applyOrderCreated = require('../events/order-created')
+const { EVENTS } = require('../constants')
 
 const pattern = {
   role: 'order',
-  cmd: 'confirm',
-  order: Joi.number().required()
+  cmd: 'create',
+  customer: Joi.number().required(),
+  product: Joi.number().required()
 }
+
+function applyOrderCommand (customer, product) {
+  const orderCreated = {
+    type: EVENTS.ORDER_CREATED,
+    id: uuid.v4(),
+    customer,
+    product
+  }
+  return orderCreated
+}
+
 function init (options) {
   this
     .add(pattern, (msg, reply) => {
       Async.auto({
-        order: (next) => {
+        customer: (next) => {
           this.act({
-            role: 'order',
+            role: 'customer',
             cmd: 'get',
-            id: msg.order
+            id: msg.customer
           }, next)
-        }
-        /*
+        },
+        product: (next) => {
+          this.act({
+            role: 'product',
+            cmd: 'get',
+            id: msg.product
+          }, next)
+        },
         event: ['customer', 'product', (res, next) => {
           const events = applyOrderCommand(res.customer, res.product)
           next(null, events)
         }],
         apply: ['event', (res, next) => {
-          const applied = applyOrderEvent(null, res.event)
+          const applied = applyOrderCreated(null, res.event)
           next(null, applied)
         }],
         commit: ['apply', 'event', (res, next) => {
           // Now we should persist the event
           next(null, {success: true})
         }]
-        */
       }, (err, res) => {
         if (err) return reply(err)
         // we return everything, but an API endpoint should probably clean this up
         reply(null, res)
       })
     })
-
-  return 'order-confirm'
+  return 'order-create'
 }
 
 module.exports = init
