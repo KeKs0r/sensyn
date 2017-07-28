@@ -1,11 +1,11 @@
 const Seneca = require('seneca')
 const Promise = require('bluebird')
-const { getEvents } = require('../utils')
+const { eventStore } = require('../utils')
 
 const s = Seneca({ log: 'test' })
   .test()
   .use('seneca-joi')
-  .use(getEvents)
+  .use(eventStore)
   .use(require('../../command/get-order'))
 const act = Promise.promisify(s.act, {context: s})
 

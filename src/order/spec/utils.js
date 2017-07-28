@@ -13,15 +13,6 @@ function getCustomer (customer) {
   return 'mock-customer'
 }
 
-function getEvents () {
-  const events = require('./fixtures/events')
-  this.add({
-    role: 'events',
-    cmd: 'get'
-  }, (msg, reply) => reply(events))
-  return 'mock-events'
-}
-
 function getOrder (order) {
   this.add({
     role: 'order',
@@ -45,9 +36,22 @@ function getProduct (product) {
   return 'mock-product'
 }
 
+function eventStore () {
+  const events = require('./fixtures/events')
+  this.add({
+    role: 'events',
+    cmd: 'get'
+  }, (msg, reply) => reply(events))
+  this.add({
+    role: 'events',
+    cmd: 'add'
+  }, (msg, reply) => reply(null, {success: true}))
+  return 'mock-events'
+}
+
 module.exports = {
   getCustomer,
   getProduct,
-  getEvents,
+  eventStore,
   getOrder
 }

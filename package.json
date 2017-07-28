@@ -12,17 +12,19 @@
   "license": "ISC",
   "dependencies": {
     "joi": "^10.6.0",
-    "seneca": "3.3.0",
+    "seneca": "^3.4.1",
+    "seneca-balance-client": "^0.6.1",
     "seneca-joi": "^1.0.1",
+    "seneca-mesh": "^0.10.0",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
     "bluebird": "^3.5.0",
-    "eslint": "^4.0.0",
+    "eslint": "^4.3.0",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jest": "^20.0.3",
-    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "jest": "^20.0.4"

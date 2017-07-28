@@ -1,15 +1,20 @@
 const Seneca = require('seneca')
 const Promise = require('bluebird')
-const { getCustomer, getProduct } = require('../utils')
+const { getCustomer, getProduct, eventStore } = require('../utils')
 const { STATUS, EVENTS } = require('../../constants')
 
-function testSeneca () {
+function testSeneca (mockEvent) {
   const s = Seneca({ log: 'test' })
     .test()
     .use('seneca-joi')
     .use(getCustomer)
     .use(getProduct)
     .use(require('../../command/create-order'))
+    .use(eventStore)
+  if (mockEvent) {
+    s.use(mockEvent)
+  }
+
   return Promise.promisify(s.act, {context: s})
 }
 
@@ -130,5 +135,23 @@ describe('5. Apply Events', () => {
 })
 
 describe('6. Commit', () => {
-  test('Commit is not yet implemented')
+  test('Stored the event', () => {
+    expect.assertions(1)
+    const spy = jest.fn((msg, reply) => reply(null, {success: true}))
+    function spyPlugin () {
+      this.add({
+        role: 'events',
+        cmd: 'add'
+      }, spy)
+    }
+    const act = testSeneca(spyPlugin)
+    return act(command)
+      .then((res) => {
+        expect(spy).toHaveBeenCalledWith(expect.objectContaining({
+          events: expect.objectContaining({
+            type: EVENTS.ORDER_CREATED
+          })
+        }))
+      })
+  })
 })

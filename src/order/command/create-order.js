@@ -49,7 +49,7 @@ function init (options) {
         }],
         commit: ['apply', 'event', (res, next) => {
           // Now we should persist the event
-          next(null, {success: true})
+          this.act({role: 'events', cmd: 'add', events: res.event}, next)
         }]
       }, (err, res) => {
         if (err) return reply(err)
